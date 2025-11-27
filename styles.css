@@ -1,0 +1,511 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/*fuentes*/
+@font-face {
+    font-family: "Inter";
+    src: url("./fonts/Inter-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("./fonts/Inter-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("./fonts/Inter-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+:root {
+    /* Colores base */
+    --color-bg-page: #fff7ed;
+    --color-bg-panel: #ffffff;
+    --color-bg-board-from: #fed7aa;
+    --color-bg-board-to: #f97316;
+
+    /* cartas */
+    --color-card-grad-from: #f97316;
+    --color-card-grad-to: #ef4444;
+    --color-card-text-default: #f9fafb;
+    --color-card-flipped-bg: #ffffff;
+    --color-card-flipped-border: #f97316;
+    --color-card-flipped-text: #111827;
+    --color-card-matched-from: #22c55e;
+    --color-card-matched-to: #16a34a;
+    --color-card-matched-text: #f9fafb;
+    --color-card-error-bg: #b91c1c;
+    --color-card-error-border: #fecaca;
+    --color-card-error-text: #fef2f2;
+
+    /* Texto */
+    --color-text-main: #111827;
+    --color-text-muted: #4b5563;
+    --color-text-soft: #6b7280;
+
+    /* Botones */
+    --color-button-primary-bg: #f97316;
+    --color-button-primary-bg-hover: #ea580c;
+    --color-button-primary-text: #f9fafb;
+
+    --color-button-secondary-bg: #ffffff;
+    --color-button-secondary-border: #f97316;
+    --color-button-secondary-text: #111827;
+    --color-button-secondary-bg-hover: #ffedd5;
+
+    /* Otros */
+    --color-border-soft: #e5e7eb;
+    --shadow-soft: 0 18px 24px rgba(15, 23, 42, 0.15);
+    --shadow-card: 0 14px 18px rgba(15, 23, 42, 0.16);
+    --shadow-panel: 0 10px 18px rgba(15, 23, 42, 0.12);
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+    --font-family-base: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+}
+
+/* -----------------------------
+   Estilos base
+------------------------------ */
+
+body {
+    font-family: var(--font-family-base);
+    background-color: var(--color-bg-page);
+    color: var(--color-text-main);
+}
+
+.page {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* -----------------------------
+   Header
+------------------------------ */
+
+.memory-header {
+    width: 100%;
+}
+
+.memory-header__content {
+    text-align: center;
+}
+
+.memory-header__title {
+    font-size: 40px;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+
+.memory-header__subtitle {
+    font-size: 20px;
+    color: var(--color-text-muted);
+    max-width: 414px;
+    margin: auto;
+}
+
+/* -----------------------------
+   Main layout
+------------------------------ */
+
+.memory-main {
+    width: 100%;
+    margin: 0 auto;
+    display: center;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* panel de informacion */
+
+/* contenedor general del panel de informacion */
+.memory-panel {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: clamp(5px, 2vw, 10px);
+    padding: clamp(5px, 30vw, 10px);
+    max-width: 400px;
+    max-height: 100px;
+    margin: 10px auto 10px auto;
+    background-color: var(--color-bg-panel);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-panel);
+    border: 2px solid rgba(249, 115, 22, 0.15);
+}
+
+/* Contenedor de los dos primeros cajones */
+.memory-panel__metrics {
+    display: flex;
+    gap: clamp(5px, 2vw, 10px);
+}
+
+/* Cada sub-cajón de texto (Movimientos / Tiempo) */
+.memory-panel__metric {
+    min-width: clamp(85px, 27vw, 120px);
+    max-width: 120px;
+    max-height: 80px;
+    min-height: clamp(70px, 20vw, 80px);
+    background-color: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(249, 115, 22, 0.35);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Cajón del botón (usa el mismo “look” que los otros) */
+.memory-panel__actions .button {
+    min-width: clamp(85px, 27vw, 120px);
+    max-width: 120px;
+    max-height: 80px;
+    min-height: clamp(70px, 20vw, 80px);
+    border-radius: 14px;
+    background-color: #ffffff;
+    border: 1px solid rgba(249, 115, 22, 0.35);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.12);
+
+}
+
+/* Texto dentro de los cajones */
+.memory-panel__label {
+    font-size: clamp(10px, 2vw, 16px);
+    font-weight: 600;
+}
+
+.memory-panel__value {
+    font-size: clamp(10px, 2vw, 20px);
+    font-weight: 700;
+}
+
+/* -----------------------------
+   Botones
+------------------------------ */
+
+.button {
+    border-radius: 999px;
+    padding: 0.55rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.16s ease, box-shadow 0.16s ease,
+        transform 0.12s ease, border-color 0.16s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+.button:focus-visible {
+    outline: 2px solid var(--color-button-primary-bg);
+    outline-offset: 2px;
+}
+
+.button--primary {
+    background: var(--color-button-primary-bg);
+    color: var(--color-button-primary-text);
+    box-shadow: 0 10px 18px rgba(249, 115, 22, 0.35);
+}
+
+.button--primary:hover {
+    background: var(--color-button-primary-bg-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 20px rgba(234, 88, 12, 0.4);
+}
+
+.button--secondary {
+    background: var(--color-button-secondary-bg);
+    color: var(--color-button-secondary-text);
+    border: 1px solid var(--color-button-secondary-border);
+}
+
+.button--secondary:hover {
+    background: var(--color-button-secondary-bg-hover);
+    transform: translateY(-1px);
+}
+
+.button:disabled,
+.button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* -----------------------------
+   Tablero de cartas
+------------------------------ */
+
+.memory-board {
+    max-width: 725px;
+    max-height: 750px;
+    border-radius: var(--radius-xl);
+    padding: 5px;
+    margin: auto;
+    background: linear-gradient(160deg,
+            var(--color-bg-board-from),
+            var(--color-bg-board-to));
+    box-shadow: var(--shadow-soft);
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Grid 4x4 */
+.card-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1 / 1;
+}
+
+/* Item del grid */
+.card-grid__item {
+    width: 100%;
+    height: 100%;
+}
+
+/* -----------------------------
+   Cartas
+------------------------------ */
+
+.card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-lg);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg,
+            var(--color-card-grad-from),
+            var(--color-card-grad-to));
+    color: var(--color-card-text-default);
+    font-size: clamp(1.5rem, 4vmin, 2.5rem);
+    font-weight: 700;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.12s ease, box-shadow 0.12s ease,
+        background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.card:focus-visible {
+    outline: 2px solid #fbbf24;
+    outline-offset: 3px;
+}
+
+.card--default:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.25);
+    background: linear-gradient(180deg,
+            #fdba74,
+            var(--color-card-grad-to));
+}
+
+.card--default {
+    background: linear-gradient(180deg,
+            var(--color-card-grad-from),
+            var(--color-card-grad-to));
+    color: var(--color-card-text-default);
+}
+
+.card--flipped {
+    background: var(--color-card-flipped-bg);
+    color: var(--color-card-flipped-text);
+    border: 2px solid var(--color-card-flipped-border);
+    box-shadow: var(--shadow-card);
+}
+
+.card--matched {
+    background: linear-gradient(180deg,
+            var(--color-card-matched-from),
+            var(--color-card-matched-to));
+    color: var(--color-card-matched-text);
+    box-shadow: 0 10px 18px rgba(21, 128, 61, 0.45);
+    transform: translateY(-1px);
+}
+
+.card--error {
+    background: var(--color-card-error-bg);
+    color: var(--color-card-error-text);
+    border: 2px solid var(--color-card-error-border);
+    box-shadow: 0 10px 18px rgba(185, 28, 28, 0.5);
+    animation: card-shake 0.25s ease-in-out;
+}
+
+.card--locked {
+    cursor: default;
+    pointer-events: none;
+}
+
+.card__content {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes card-shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    50% {
+        transform: translateX(4px);
+    }
+
+    75% {
+        transform: translateX(-3px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* -----------------------------
+   Modal de victoria
+------------------------------ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.18s ease, visibility 0.18s ease;
+    z-index: 20;
+}
+
+.modal-overlay--visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.modal {
+    max-width: 420px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: var(--radius-xl);
+    padding: 1.5rem 1.75rem;
+    box-shadow: var(--shadow-soft);
+    text-align: center;
+}
+
+.modal__title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.modal__text {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.modal__stats {
+    font-size: 0.9rem;
+    color: var(--color-text-soft);
+    margin-bottom: 1.25rem;
+}
+
+/* -----------------------------
+   Utilidades
+------------------------------ */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* -----------------------------
+   Responsive
+------------------------------ */
+
+@media (max-width: 768px) {
+    .page {
+        padding: 0.75rem;
+    }
+
+    .memory-panel {
+        padding: 0.75rem;
+    }
+
+    .memory-board {
+        padding: 0.75rem;
+    }
+
+    .card-grid {
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .memory-header__title {
+        font-size: 1.5rem;
+    }
+
+    .memory-panel__value {
+        font-size: 1.1rem;
+    }
+
+    .card {
+        font-size: 1.5rem;
+    }
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juego de memoria</title>
+    <meta name="description" content="Juego de memoria de parejas con contador de movimientos y tiempo." />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="page">
+
+        <!-- Encabezado: título + instrucciones -->
+        <header class="memory-header">
+            <div class="memory-header__content">
+                <h1 class="memory-header__title">Juego de memoria</h1>
+                <p class="memory-header__subtitle">
+                    Encuentra todas las parejas. Haz click sobre las cartas para encontrarlas.
+                </p>
+            </div>
+        </header>
+
+        <main class="memory-main">
+            <!-- Panel de información: movimientos, tiempo, reiniciar -->
+            <section class="memory-panel" aria-label="Información de la partida">
+                <div class="memory-panel__metrics">
+                    <div class="memory-panel__metric">
+                        <span class="memory-panel__label">Movimientos :</span>
+                        <span class="memory-panel__value" id="moves-count">0</span>
+                    </div>
+                    <div class="memory-panel__metric">
+                        <span class="memory-panel__label">Tiempo :</span>
+                        <span class="memory-panel__value" id="time-elapsed">00:00</span>
+                    </div>
+                </div>
+
+                <div class="memory-panel__actions">
+                    <button class="button button--secondary" type="button" id="reset-button">
+                        <img src="imagenes/Refresh cw.png" alt="Reiniciar" />
+                    </button>
+                </div>
+            </section>
+
+            <!-- Tablero de cartas -->
+            <section class="memory-board" aria-label="Tablero del juego de memoria">
+                <ul class="card-grid" id="card-grid">
+                    <!-- Las cartas se generarán dinámicamente con JavaScript -->
+                </ul>
+            </section>
+        </main>
+
+        <!-- Zona para mensajes accesibles (screen readers) -->
+        <p class="sr-only" aria-live="polite" id="status-message"></p>
+
+        <!-- Modal de victoria -->
+        <div class="modal-overlay" id="win-modal" aria-hidden="true">
+            <div class="modal" role="dialog" aria-labelledby="win-modal-title" aria-describedby="win-modal-body">
+                <h2 class="modal__title" id="win-modal-title">¡Has ganado!</h2>
+                <p class="modal__text" id="win-modal-body">
+                    Has encontrado todas las parejas.
+                </p>
+                <p class="modal__stats">
+                    Movimientos:
+                    <span id="win-moves">0</span>
+                    ·
+                    Tiempo:
+                    <span id="win-time">00:00</span>
+                </p>
+                <button class="button button--primary" type="button" id="play-again-button">
+                    Jugar de nuevo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
