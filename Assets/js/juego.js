@@ -1,14 +1,31 @@
-// -----------------------------
-// Configuración del juego
-// -----------------------------
+// Configuración del juego y variables
 
-const SYMBOLS = ["🍊", "🍉", "🍋", "🍒", "⭐", "💎", "🔥", "🌙"]; // 8 símbolos → 8 parejas
+// imagenes para las cartas
+const SYMBOLS = [
+    { id: 1, path: "Assets/img/1.png" },
+    { id: 2, path: "Assets/img/2.png" },
+    { id: 3, path: "Assets/img/3.png" },
+    { id: 4, path: "Assets/img/4.png" },
+    { id: 5, path: "Assets/img/5.png" },
+    { id: 6, path: "Assets/img/6.png" },
+    { id: 7, path: "Assets/img/7.png" },
+    { id: 8, path: "Assets/img/8.png" },
+];
+
+// sonidos del juego
+const SOUNDS = {
+    error: { path: "Assets/sounds/error.wav", audio: null },
+    match: { path: "Assets/sounds/match.wav", audio: null },
+    win: { path: "Assets/sounds/win.wav", audio: null }
+};
+// cantidad de pares
 const PAIR_COUNT = SYMBOLS.length;
+// tiempo para voltear la carta
 const FLIP_BACK_DELAY_MS = 700;
 
 // Estado del juego
 let deck = [];
-let revealedCards = []; // [{ index, element, symbol }]
+let revealedCards = [];
 let movesCount = 0;
 let matchedPairs = 0;
 let elapsedSeconds = 0;
@@ -27,16 +44,37 @@ let winMovesElement;
 let winTimeElement;
 let playAgainButtonElement;
 
-// -----------------------------
 // Inicialización
-// -----------------------------
-
 document.addEventListener("DOMContentLoaded", () => {
+    loadSounds();
     cacheDomElements();
     attachGlobalEventHandlers();
     startNewGame();
 });
 
+
+
+// sonidos - cargar archivos de audio
+function loadSounds() {
+    Object.keys(SOUNDS).forEach((key) => {
+        const sound = SOUNDS[key];
+        sound.audio = new Audio(sound.path);
+        sound.audio.preload = "auto";
+    });
+}
+
+// reproducir sonido
+function playSound(soundKey) {
+    const sound = SOUNDS[soundKey];
+    if (sound && sound.audio) {
+        sound.audio.currentTime = 0; // reiniciar si ya está sonando
+        sound.audio.play().catch((error) => {
+            console.warn(`No se pudo reproducir el sonido ${soundKey}:`, error);
+        });
+    }
+}
+
+// cache
 function cacheDomElements() {
     cardGridElement = document.getElementById("card-grid");
     movesCountElement = document.getElementById("moves-count");
@@ -49,6 +87,7 @@ function cacheDomElements() {
     playAgainButtonElement = document.getElementById("play-again-button");
 }
 
+// eventos
 function attachGlobalEventHandlers() {
     resetButtonElement.addEventListener("click", () => {
         startNewGame();
@@ -79,7 +118,6 @@ function startNewGame() {
     renderBoard();
     updateMovesUI();
     updateTimeUI();
-    updateStatusMessage("Nueva partida. Voltea dos cartas para empezar.");
     hideWinModal();
 }
 
@@ -102,7 +140,7 @@ function createDeck() {
 
     deck = symbolsDoubled.map((symbol, index) => ({
         id: index,
-        symbol,
+        path: symbol.path,
         isMatched: false
     }));
 }
@@ -128,7 +166,7 @@ function renderBoard() {
         button.type = "button";
         button.className = "card card--default";
         button.dataset.index = String(index);
-        button.dataset.symbol = cardData.symbol;
+        button.dataset.path = cardData.path;
 
         const contentSpan = document.createElement("span");
         contentSpan.className = "card__content";
@@ -155,31 +193,53 @@ function handleCardClick(event) {
     if (cardElement.classList.contains("card--locked")) return;
 
     const cardIndex = Number(cardElement.dataset.index);
-    const cardSymbol = cardElement.dataset.symbol;
+    const cardPath = cardElement.dataset.path;
 
     if (!isGameStarted) {
         startTimer();
         isGameStarted = true;
     }
 
-    flipCardUp(cardElement, cardSymbol);
-    addRevealedCard(cardIndex, cardElement, cardSymbol);
+    flipCardUp(cardElement, cardPath);
+    addRevealedCard(cardIndex, cardElement, cardPath);
 
     if (revealedCards.length === 2) {
         handlePairRevealed();
     }
 }
 
-function flipCardUp(cardElement, symbol) {
-    cardElement.classList.remove("card--default");
-    cardElement.classList.remove("card--error");
-    cardElement.classList.add("card--flipped");
-
-    const contentSpan = cardElement.querySelector(".card__content");
-    if (contentSpan) {
-        contentSpan.textContent = symbol;
-    }
+function flipCardUp(cardElement, imagePath) {
+    cardElement.classList.remove("card--default", "card--error");
+    cardElement.classList.add("card--flipped", "card--flip-anim");
+    updateCardContentWithFlip(cardElement, imagePath);
 }
+
+
+function updateCardContentWithFlip(cardElement, imagePath) {
+    const contentSpan = cardElement.querySelector(".card__content");
+    if (!contentSpan) return;
+
+    // Cambiar el contenido a mitad de la animación de flip
+    setTimeout(() => {
+        contentSpan.innerHTML = "";
+        const img = document.createElement("img");
+        img.src = imagePath;
+        img.alt = "Carta";
+        img.style.width = "80%";
+        img.style.height = "80%";
+        img.style.objectFit = "contain";
+        contentSpan.appendChild(img);
+    }, 150);
+
+    cardElement.addEventListener(
+        "animationend",
+        () => {
+            cardElement.classList.remove("card--flip-anim");
+        },
+        { once: true }
+    );
+}
+
 
 function flipCardDown(cardElement) {
     cardElement.classList.remove("card--flipped", "card--error");
@@ -187,7 +247,7 @@ function flipCardDown(cardElement) {
 
     const contentSpan = cardElement.querySelector(".card__content");
     if (contentSpan) {
-        contentSpan.textContent = "?";
+        contentSpan.innerHTML = "?";
     }
 }
 
@@ -201,8 +261,8 @@ function markCardAsError(cardElement) {
     cardElement.classList.add("card--error");
 }
 
-function addRevealedCard(index, element, symbol) {
-    revealedCards.push({ index, element, symbol });
+function addRevealedCard(index, element, path) {
+    revealedCards.push({ index, element, path });
 }
 
 // -----------------------------
@@ -215,7 +275,7 @@ function handlePairRevealed() {
     incrementMoves();
 
     const [first, second] = revealedCards;
-    const isMatch = first.symbol === second.symbol;
+    const isMatch = first.path === second.path;
 
     if (isMatch) {
         processMatch(first, second);
@@ -232,7 +292,7 @@ function processMatch(first, second) {
     deck[second.index].isMatched = true;
 
     matchedPairs += 1;
-    updateStatusMessage("¡Bien! Has encontrado una pareja.");
+    playSound("match"); // sonido de acierto
 
     revealedCards = [];
 
@@ -245,7 +305,7 @@ function processMismatch(first, second) {
     isBoardLocked = true;
     markCardAsError(first.element);
     markCardAsError(second.element);
-    updateStatusMessage("Las cartas no coinciden.");
+    playSound("error"); // sonido de error
 
     setTimeout(() => {
         flipCardDown(first.element);
@@ -256,10 +316,8 @@ function processMismatch(first, second) {
     }, FLIP_BACK_DELAY_MS);
 }
 
-// -----------------------------
-// Movimientos y tiempo
-// -----------------------------
 
+// contador de movimientos y tiempo
 function incrementMoves() {
     movesCount += 1;
     updateMovesUI();
@@ -299,13 +357,10 @@ function formatTime(totalSeconds) {
     return `${minutesString}:${secondsString}`;
 }
 
-// -----------------------------
 // Modal de victoria
-// -----------------------------
-
 function handleGameWon() {
     stopTimer();
-    updateStatusMessage("¡Has encontrado todas las parejas!");
+    playSound("win"); // sonido de victoria
     updateWinModalStats();
     showWinModal();
 }
@@ -329,10 +384,3 @@ function isWinModalVisible() {
     return winModalOverlayElement.classList.contains("modal-overlay--visible");
 }
 
-// -----------------------------
-// Accesibilidad: mensajes live
-// -----------------------------
-
-function updateStatusMessage(message) {
-    statusMessageElement.textContent = message;
-}
